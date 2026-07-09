@@ -1,0 +1,27 @@
+# Virtual Environment
+.venv/
+
+# Environment Variables
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Distribution Files
+build/
+dist/
+*.egg-info/
+
+# IDE Settings
+.vscode/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# SQLite Database
+*.db
