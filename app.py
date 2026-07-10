@@ -1,25 +1,51 @@
 import streamlit as st
 
+from app.components.sidebar import render_sidebar
+from app.ui.home import show as show_home
+from app.ui.assistant import show as show_assistant
+from app.ui.phishing import show as show_phishing
+from app.ui.password import show as show_password
+from app.ui.reports import show as show_reports
+from app.ui.history import show as show_history
+from app.ui.learn import show as show_learn
+from app.ui.about import show as show_about
+
+
 st.set_page_config(
     page_title="CyberGuard AI",
     page_icon="🛡️",
-    layout="wide"
+    layout="wide",
 )
 
-st.title("🛡️ CyberGuard AI")
+from app.state.app_state import initialize
 
-st.subheader("Personal Cybersecurity Triage Assistant")
+initialize()
 
-st.write(
-    """
-Welcome to CyberGuard AI!
+if "page" not in st.session_state:
+    st.session_state["page"] = "Dashboard"
+    
+page = render_sidebar()
 
-This application will help users:
+if page == "Dashboard":
+    show_home()
 
-- Analyze cybersecurity incidents
-- Detect phishing attempts
-- Check password strength
-- Learn cybersecurity best practices
-- Generate incident reports
-"""
-)
+elif page == "Assistant":
+    show_assistant()
+
+elif page == "Phishing":
+    show_phishing()
+
+elif page == "Passwords":
+    show_password()
+
+elif page == "Reports":
+    show_reports()
+
+elif page == "History":
+    show_history()
+
+elif page == "Learn":
+    show_learn()
+
+elif page == "About":
+    show_about()
