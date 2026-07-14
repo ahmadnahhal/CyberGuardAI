@@ -27,7 +27,7 @@ def show():
             )
             return
 
-        response = process_request(password)
+        response = process_request(password,intent="password")
 
         result = response["result"]
 
