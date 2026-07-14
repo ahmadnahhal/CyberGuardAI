@@ -30,12 +30,24 @@ def show():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.button("🤖 Open Assistant", use_container_width=True)
-        st.button("📧 Analyze Email", use_container_width=True)
+
+     if st.button("🤖 Open Assistant", use_container_width=True):
+        st.session_state.page = "Assistant"
+        st.rerun()
+
+     if st.button("📧 Analyze Email", use_container_width=True):
+        st.session_state.page = "Phishing"
+        st.rerun()
 
     with col2:
-        st.button("🔑 Check Password", use_container_width=True)
-        st.button("📄 Generate Report", use_container_width=True)
+
+     if st.button("🔑 Check Password", use_container_width=True):
+        st.session_state.page = "Passwords"
+        st.rerun()
+
+     if st.button("📄 Generate Report", use_container_width=True):
+        st.session_state.page = "Reports"
+        st.rerun()
     
     st.divider()
     
