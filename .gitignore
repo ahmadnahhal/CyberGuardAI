@@ -25,3 +25,6 @@ Thumbs.db
 
 # SQLite Database
 *.db
+
+# Database
+data/cyberguard.db
