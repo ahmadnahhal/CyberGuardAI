@@ -7,8 +7,11 @@ class AgentState(TypedDict):
     """
 
     user_input: str
+
     intent: str
+
     selected_tool: str
+
     tool_result: Any
-    confirmation_required: bool
+
     response: str

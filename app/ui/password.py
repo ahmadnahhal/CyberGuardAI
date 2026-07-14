@@ -1,6 +1,6 @@
 import streamlit as st
 
-from app.services.password_checker import analyze_password
+from app.agent.graph import process_request
 
 
 def show():
@@ -27,7 +27,9 @@ def show():
             )
             return
 
-        result = analyze_password(password)
+        response = process_request(password)
+
+        result = response["result"]
 
         st.success(
             f"Strength: {result['strength']}"
