@@ -9,7 +9,8 @@ from app.ui.reports import show as show_reports
 from app.ui.history import show as show_history
 from app.ui.learn import show as show_learn
 from app.ui.about import show as show_about
-
+from app.database.database import initialize_database
+from app.state.app_state import initialize
 
 st.set_page_config(
     page_title="CyberGuard AI",
@@ -17,7 +18,7 @@ st.set_page_config(
     layout="wide",
 )
 
-from app.state.app_state import initialize
+initialize_database()
 
 initialize()
 
