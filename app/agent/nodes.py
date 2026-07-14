@@ -1,6 +1,7 @@
 from app.agent.agent_state import AgentState
 from app.agent.router import detect_intent
 from app.tools.registry import TOOL_REGISTRY
+from app.services.history_service import save_chat
 
 def detect_intent_node(state: AgentState):
 
@@ -29,5 +30,14 @@ def execute_tool_node(state: AgentState):
 def response_node(state: AgentState):
 
     state["response"] = "Completed"
+
+    return state
+
+def save_history_node(state: AgentState):
+
+    save_chat(
+        state["user_input"],
+        str(state["tool_result"]),
+    )
 
     return state

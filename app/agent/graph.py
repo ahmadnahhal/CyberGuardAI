@@ -3,6 +3,7 @@ from app.agent.agent_state import AgentState
 from app.agent.nodes import (
     detect_intent_node,
     execute_tool_node,
+    save_history_node,
     response_node,
 )
 
@@ -23,6 +24,11 @@ graph_builder.add_node(
     response_node,
 )
 
+graph_builder.add_node(
+    "save_history",
+    save_history_node,
+)
+
 graph_builder.set_entry_point(
     "detect_intent"
 )
@@ -34,6 +40,11 @@ graph_builder.add_edge(
 
 graph_builder.add_edge(
     "execute_tool",
+    "save_history",
+)
+
+graph_builder.add_edge(
+    "save_history",
     "response",
 )
 
