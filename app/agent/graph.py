@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, END
+from app.agent.workflow import check_requirements_node
 from app.agent.agent_state import AgentState
 from app.agent.nodes import (
     detect_intent_node,
@@ -12,6 +13,11 @@ graph_builder = StateGraph(AgentState)
 graph_builder.add_node(
     "detect_intent",
     detect_intent_node,
+)
+
+graph_builder.add_node(
+    "check_requirements",
+    check_requirements_node,
 )
 
 graph_builder.add_node(
@@ -35,6 +41,11 @@ graph_builder.set_entry_point(
 
 graph_builder.add_edge(
     "detect_intent",
+    "check_requirements",
+)
+
+graph_builder.add_edge(
+    "check_requirements",
     "execute_tool",
 )
 
@@ -55,25 +66,43 @@ graph_builder.add_edge(
 
 graph = graph_builder.compile()
 
-def process_request(user_input: str, intent: str | None = None):
+def process_request(
+    user_input: str,
+    previous_state: dict | None = None,
+    intent: str | None = None,
+):
 
-    initial_state = {
+    if previous_state is None:
 
-        "user_input": user_input,
+        state = {
 
-        "intent": intent or "",
+            "user_input": user_input,
 
-        "selected_tool": "",
+            "intent": intent or "",
 
-        "tool_result": None,
+            "selected_tool": "",
 
-        "response": "",
-    }
-    
-    final_state = graph.invoke(initial_state)
+            "workflow_state": "",
 
-    return {
-        "intent": final_state["intent"],
-        "result": final_state["tool_result"],
-        "response": final_state["response"],
-    }
+            "collected_information": {},
+
+            "missing_fields": [],
+
+            "pending_confirmation": False,
+
+            "pending_action": "",
+
+            "tool_result": None,
+
+            "response": "",
+        }
+
+    else:
+
+        state = previous_state
+
+        state["user_input"] = user_input
+
+    final_state = graph.invoke(state)
+
+    return final_state

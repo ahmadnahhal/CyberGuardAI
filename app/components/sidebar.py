@@ -8,7 +8,6 @@ NAV_ITEMS = [
     ("🔑", "Passwords"),
     ("📄", "Reports"),
     ("🕘", "History"),
-    ("📚", "Learn"),
     ("ℹ️", "About"),
 ]
 

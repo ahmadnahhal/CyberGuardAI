@@ -7,7 +7,6 @@ from app.ui.phishing import show as show_phishing
 from app.ui.password import show as show_password
 from app.ui.reports import show as show_reports
 from app.ui.history import show as show_history
-from app.ui.learn import show as show_learn
 from app.ui.about import show as show_about
 from app.database.database import initialize_database
 from app.state.app_state import initialize
@@ -44,9 +43,6 @@ elif page == "Reports":
 
 elif page == "History":
     show_history()
-
-elif page == "Learn":
-    show_learn()
 
 elif page == "About":
     show_about()

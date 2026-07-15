@@ -19,6 +19,17 @@ def initialize_database():
 
     connection = get_connection()
     cursor = connection.cursor()
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS incidents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    severity TEXT,
+    status TEXT,
+    created_at TEXT
+)
+""")
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS password_checks (
@@ -59,6 +70,34 @@ def initialize_database():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_preferences (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    preference_key TEXT UNIQUE,
+
+    preference_value TEXT
+)
+""")
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS execution_logs (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    intent TEXT,
+
+    selected_tool TEXT,
+
+    status TEXT,
+
+    message TEXT
+)
+""")
 
     connection.commit()
     connection.close()
