@@ -75,33 +75,31 @@ def process_request(
     if previous_state is None:
 
         state = {
-
             "user_input": user_input,
-
             "intent": intent or "",
-
             "selected_tool": "",
-
             "workflow_state": "",
-
             "collected_information": {},
-
             "missing_fields": [],
-
             "pending_confirmation": False,
-
             "pending_action": "",
-
             "tool_result": None,
-
             "response": "",
         }
 
     else:
 
-        state = previous_state
+        state = previous_state.copy()
 
         state["user_input"] = user_input
+
+        # Reset values that must be recalculated
+        state["intent"] = ""
+        state["selected_tool"] = ""
+        state["workflow_state"] = ""
+        state["missing_fields"] = []
+        state["tool_result"] = None
+        state["response"] = ""
 
     final_state = graph.invoke(state)
 

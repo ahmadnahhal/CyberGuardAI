@@ -61,13 +61,11 @@ def response_node(state: AgentState):
     if result["status"] == "error":
 
         state["response"] = f"❌ {result['error']}"
-
         state["workflow_state"] = "completed"
 
         return state
 
     tool = result["tool"]
-
     data = result["data"]
 
     if tool == "password":
@@ -84,7 +82,7 @@ def response_node(state: AgentState):
 
         if recommendations:
 
-            message += "\n\n### Recommendations\n"
+            message += "\n\n### Recommendations"
 
             for recommendation in recommendations:
                 message += f"\n• {recommendation}"
@@ -103,7 +101,7 @@ def response_node(state: AgentState):
 
         if findings:
 
-            message += "\n\n### Indicators\n"
+            message += "\n\n### Indicators"
 
             for finding in findings:
                 message += f"\n• {finding}"
@@ -113,19 +111,30 @@ def response_node(state: AgentState):
     elif tool == "information":
 
         state["response"] = data["answer"]
-        
+
     elif tool == "incident":
 
         state["response"] = (
-         f"✅ Incident created successfully.\n\n"
-         f"**Incident ID:** {data['incident_id']}\n"
-         f"**Title:** {data['title']}\n"
-         f"**Severity:** {data['severity']}\n"
-         f"**Status:** {data['status']}")
+            f"✅ Incident created successfully.\n\n"
+            f"**Incident ID:** {data['incident_id']}\n"
+            f"**Title:** {data['title']}\n"
+            f"**Severity:** {data['severity']}\n"
+            f"**Status:** {data['status']}"
+        )
+
+    elif tool == "report":
+
+        state["response"] = (
+            f"📄 Report generated successfully.\n\n"
+            f"**Report ID:** {data['report_id']}\n"
+            f"**Title:** {data['title']}\n"
+            f"**Type:** {data['report_type']}\n\n"
+            f"The report has been saved to the database."
+        )
 
     else:
 
-        state["response"] = "Request completed."
+        state["response"] = f"Unknown tool: {tool}"
 
     state["workflow_state"] = "completed"
 

@@ -13,18 +13,27 @@ VALID_INTENTS = {
 
 def detect_intent(user_input: str) -> str:
     """
-    Use the LLM to determine which tool should handle the request.
+    Use the LLM to determine which tool should handle the user's request.
+    Falls back safely if the model returns extra text.
     """
 
     try:
 
-        intent = ask_groq(
+        response = ask_groq(
             ROUTER_SYSTEM_PROMPT,
             user_input,
-        ).strip().lower()
+        )
 
-        if intent in VALID_INTENTS:
-            return intent
+        print("\n===== ROUTER =====")
+        print("USER:", user_input)
+        print("RAW RESPONSE:", response)
+        print("==================\n")
+
+        response = response.lower().strip()
+
+        for intent in VALID_INTENTS:
+            if intent in response:
+                return intent
 
     except Exception as error:
 

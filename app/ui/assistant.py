@@ -13,13 +13,11 @@ def show():
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-        
+
     if "agent_state" not in st.session_state:
-
         st.session_state.agent_state = None
-        
-    for message in st.session_state.messages:
 
+    for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
@@ -29,32 +27,33 @@ def show():
 
     if prompt:
 
-     st.session_state.messages.append(
-        {
-            "role": "user",
-            "content": prompt,
-        }
+        st.session_state.messages.append(
+            {
+                "role": "user",
+                "content": prompt,
+            }
         )
 
-     with st.chat_message("user"):
-        st.markdown(prompt)
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-     with st.spinner("CyberGuard AI is thinking..."):
+        with st.spinner("CyberGuard AI is thinking..."):
 
-        state = process_request(
-        prompt,
-        st.session_state.agent_state,
-    )
+            state = process_request(
+                prompt,
+                st.session_state.agent_state,
+            )
 
-        st.session_state.agent_state = state
+            st.session_state.agent_state = state
 
-     assistant_message = state["response"]
+        assistant_message = state["response"]
 
-    st.session_state.messages.append(
-     {
-        "role": "assistant",
-        "content": assistant_message,
-     })
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": assistant_message,
+            }
+        )
 
-    with st.chat_message("assistant"):
-     st.markdown(assistant_message)
+        with st.chat_message("assistant"):
+            st.markdown(assistant_message)
