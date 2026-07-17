@@ -1,10 +1,16 @@
-import streamlit as st
-from app.components.card import status_card
 import random
+
+import streamlit as st
+
+from app.components.card import status_card
+from app.services.dashboard_service import get_dashboard_statistics
 from data.tips import TIPS
 
 
 def show():
+
+    stats = get_dashboard_statistics()
+
     st.title("🛡️ CyberGuard AI")
 
     st.subheader("Personal Cybersecurity Triage Assistant")
@@ -12,16 +18,32 @@ def show():
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        status_card("🤖", "AI Status", "Ready")
+        status_card(
+            "🤖",
+            "AI Status",
+            stats["ai_status"],
+        )
 
     with col2:
-        status_card("🛡", "Threat Level", "Low")
+        status_card(
+            "🛡",
+            "Threat Level",
+            stats["threat_level"],
+        )
 
     with col3:
-        status_card("📄", "Reports", "0")
+        status_card(
+            "📄",
+            "Reports",
+            str(stats["reports"]),
+        )
 
     with col4:
-        status_card("📁", "Incidents", "0")
+        status_card(
+            "📁",
+            "Incidents",
+            str(stats["incidents"]),
+        )
 
     st.divider()
 
@@ -31,24 +53,38 @@ def show():
 
     with col1:
 
-     if st.button("🤖 Open Assistant", use_container_width=True):
-        st.session_state.page = "Assistant"
-        st.rerun()
+        if st.button(
+            "🤖 Open Assistant",
+            use_container_width=True,
+        ):
+            st.session_state.page = "Assistant"
+            st.rerun()
 
-     if st.button("📧 Analyze Email", use_container_width=True):
-        st.session_state.page = "Phishing"
-        st.rerun()
+        if st.button(
+            "📧 Analyze Email",
+            use_container_width=True,
+        ):
+            st.session_state.page = "Phishing"
+            st.rerun()
 
     with col2:
 
-     if st.button("🔑 Check Password", use_container_width=True):
-        st.session_state.page = "Passwords"
-        st.rerun()
+        if st.button(
+            "🔑 Check Password",
+            use_container_width=True,
+        ):
+            st.session_state.page = "Passwords"
+            st.rerun()
 
-     if st.button("📄 Generate Report", use_container_width=True):
-        st.session_state.page = "Reports"
-        st.rerun()
-    
+        if st.button(
+            "📄 Generate Report",
+            use_container_width=True,
+        ):
+            st.session_state.page = "Reports"
+            st.rerun()
+
     st.divider()
-    
-    st.info(f"💡 Cyber Tip of the Day:\n\n{random.choice(TIPS)}")
+
+    st.info(
+        f"💡 Cyber Tip of the Day:\n\n{random.choice(TIPS)}"
+    )
