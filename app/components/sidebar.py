@@ -7,6 +7,7 @@ NAV_ITEMS = [
     ("📧", "Phishing"),
     ("🔑", "Passwords"),
     ("📄", "Reports"),
+    ("🚨", "Incidents"),
     ("🕘", "History"),
     ("ℹ️", "About"),
 ]

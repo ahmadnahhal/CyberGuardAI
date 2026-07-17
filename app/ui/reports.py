@@ -11,17 +11,20 @@ def show():
     st.title("📄 Reports")
 
     st.write(
-        "Generate, view and manage cybersecurity reports."
+        "Generate, review and manage cybersecurity reports."
     )
 
     st.divider()
 
-    st.subheader("Generate Report")
+    st.subheader("📝 Generate New Report")
 
     report_input = st.text_area(
         "Describe the cybersecurity event",
         height=180,
-        placeholder="Example: User received a phishing email requesting Microsoft credentials..."
+        placeholder=(
+            "Example:\n"
+            "A user received a phishing email requesting Microsoft credentials..."
+        ),
     )
 
     if st.button(
@@ -37,23 +40,35 @@ def show():
 
         else:
 
-            report = generate_report(report_input)
+            report = generate_report(
+                report_input
+            )
 
-            st.success("Report generated successfully.")
+            st.success(
+                "✅ Report generated successfully."
+            )
 
-            st.markdown(f"### {report['title']}")
+            st.markdown(
+                f"### {report['title']}"
+            )
 
-            st.markdown(report["content"])
+            st.markdown(
+                report["content"]
+            )
 
     st.divider()
 
-    st.subheader("Saved Reports")
-
     reports = get_reports()
+
+    st.subheader(
+        f"📚 Saved Reports ({len(reports)})"
+    )
 
     if not reports:
 
-        st.info("No reports have been generated yet.")
+        st.info(
+            "No reports have been generated yet."
+        )
 
         return
 
@@ -62,9 +77,27 @@ def show():
         report_id, title, report_type, content, created_at = report
 
         with st.expander(
-            f"{title} ({created_at})"
+            f"📄 Report #{report_id} • {title}"
         ):
 
-            st.write(f"**Type:** {report_type}")
+            col1, col2 = st.columns(2)
 
-            st.write(content)
+            with col1:
+                st.metric(
+                    "Report ID",
+                    report_id,
+                )
+
+            with col2:
+                st.metric(
+                    "Type",
+                    report_type,
+                )
+
+            st.caption(
+                f"Created: {created_at}"
+            )
+
+            st.markdown("---")
+
+            st.markdown(content)
