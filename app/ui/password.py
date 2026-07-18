@@ -29,7 +29,7 @@ def show():
 
         response = process_request(password,intent="password")
 
-        result = response["result"]
+        result = response["tool_result"]["data"]
 
         st.success(
             f"Strength: {result['strength']}"

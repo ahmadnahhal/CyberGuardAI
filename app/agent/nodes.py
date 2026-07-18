@@ -2,6 +2,8 @@ from app.agent.agent_state import AgentState
 from app.agent.router import detect_intent
 from app.tools.registry import TOOL_REGISTRY
 from app.services.history_service import save_chat
+from app.services.log_service import log_execution
+from app.services.translation_service import tr
 
 def detect_intent_node(state: AgentState):
 
@@ -46,17 +48,38 @@ def execute_tool_node(state: AgentState):
 
         return state
 
+    # Don't execute until confirmation has been given
+    if state["workflow_state"] != "ready":
+         return state
+
     state["selected_tool"] = intent
 
-    state["tool_result"] = tool(
-        state["user_input"]
+    if intent in (
+    "information",
+    "incident",
+    "report",
+    ):
+
+     state["tool_result"] = tool(
+        state["user_input"],
+        state.get("conversation_history", []),
     )
+
+    else:
+
+     state["tool_result"] = tool(
+        state["user_input"],
+     )
 
     return state
 
 def response_node(state: AgentState):
 
-    result = state["tool_result"]
+    result = state.get("tool_result")
+
+    # No tool executed (confirmation, cancellation, etc.)
+    if result is None:
+        return state
 
     if result["status"] == "error":
 
@@ -70,24 +93,37 @@ def response_node(state: AgentState):
 
     if tool == "password":
 
-        recommendations = data.get("recommendations", [])
+     recommendations = data.get("recommendations", [])
+
+     if "generated_password" in data:
 
         message = (
-            f"## 🔑 Password Analysis\n\n"
+            "## 🔐 Generated Password\n\n"
+            f"**Password:** `{data['generated_password']}`\n\n"
             f"**Strength:** {data['strength']}\n\n"
             f"**Score:** {data['score']}/10\n\n"
             f"**Entropy:** {data['entropy']} bits\n\n"
             f"**Estimated Crack Time:** {data['crack_time']}"
         )
 
-        if recommendations:
+     else:
 
-            message += "\n\n### Recommendations"
+        message = (
+            "## 🔑 Password Analysis\n\n"
+            f"**Strength:** {data['strength']}\n\n"
+            f"**Score:** {data['score']}/10\n\n"
+            f"**Entropy:** {data['entropy']} bits\n\n"
+            f"**Estimated Crack Time:** {data['crack_time']}"
+        )
 
-            for recommendation in recommendations:
-                message += f"\n• {recommendation}"
+     if recommendations:
 
-        state["response"] = message
+        message += "\n\n### Recommendations"
+
+        for recommendation in recommendations:
+            message += f"\n• {recommendation}"
+
+     state["response"] = message
 
     elif tool == "phishing":
 
@@ -115,7 +151,7 @@ def response_node(state: AgentState):
     elif tool == "incident":
 
         state["response"] = (
-            f"✅ Incident created successfully.\n\n"
+            f"{tr('incident_created', state['language'])}\n\n"
             f"**Incident ID:** {data['incident_id']}\n"
             f"**Title:** {data['title']}\n"
             f"**Severity:** {data['severity']}\n"
@@ -125,18 +161,46 @@ def response_node(state: AgentState):
     elif tool == "report":
 
         state["response"] = (
-            f"📄 Report generated successfully.\n\n"
+            f"{tr('report_created', state['language'])}\n\n"
             f"**Report ID:** {data['report_id']}\n"
             f"**Title:** {data['title']}\n"
             f"**Type:** {data['report_type']}\n\n"
             f"The report has been saved to the database."
         )
+        
+    elif tool == "memory":
+
+        state["response"] = data["message"]
 
     else:
 
         state["response"] = f"Unknown tool: {tool}"
 
     state["workflow_state"] = "completed"
+    
+    status = "Success"
+
+    if result["status"] == "error":
+     status = "Error"
+
+    log_execution(
+     intent=state["intent"],
+     selected_tool=state["selected_tool"],
+     status=status,
+     message=state["response"],
+     )
+    
+    history = state.get("conversation_history", [])
+
+    history.append(
+     {
+        "user": state["user_input"],
+        "assistant": state["response"],
+     }
+    )
+
+# Keep only the last 6 exchanges
+    state["conversation_history"] = history[-6:]
 
     return state
 

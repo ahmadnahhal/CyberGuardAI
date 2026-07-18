@@ -10,6 +10,16 @@ phishing
 incident
 report
 information
+memory
+
+Available intents:
+
+information
+password
+phishing
+incident
+report
+memory
 
 Do NOT explain.
 Do NOT answer the user.
@@ -135,6 +145,72 @@ Difference between virus and worm.
 How do VPNs work?
 How does AES encryption work?
 
+========================
+MEMORY
+========================
+
+Choose "memory" if the user wants CyberGuard AI to remember
+information or preferences for future conversations.
+
+This includes:
+
+- Name
+- Profession
+- Organization
+- Preferred language
+- Preferred response style
+- Any long-term preference
+
+Examples:
+
+Remember my name is Alex.
+→ memory
+
+Remember I work in cybersecurity.
+→ memory
+
+Remember I prefer French.
+→ memory
+
+Remember I prefer English.
+→ memory
+
+Speak French.
+→ memory
+
+Speak English.
+→ memory
+
+Answer in French.
+→ memory
+
+Answer in English.
+→ memory
+
+Respond in French.
+→ memory
+
+Respond in English.
+→ memory
+
+Always speak French.
+→ memory
+
+Always answer in English.
+→ memory
+
+Parle français.
+→ memory
+
+Parle anglais.
+→ memory
+
+Réponds en français.
+→ memory
+
+Réponds en anglais.
+→ memory
+
 IMPORTANT:
 
 If the user is ASKING ABOUT a cybersecurity topic,
@@ -179,6 +255,26 @@ Decision examples:
 When uncertain, choose:
 
 information
+
+IMPORTANT:
+
+Changing the assistant's language is NOT an information request.
+
+It is a memory request because the language preference should be remembered.
+
+Examples:
+
+Speak French.
+→ memory
+
+Speak English.
+→ memory
+
+Parle français.
+→ memory
+
+Réponds en français.
+→ memory
 
 If the user is asking about CyberGuard AI itself,
 its capabilities, or how to use it,

@@ -7,6 +7,7 @@ VALID_INTENTS = {
     "phishing",
     "incident",
     "report",
+    "memory",
     "information",
 }
 

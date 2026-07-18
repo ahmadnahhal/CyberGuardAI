@@ -1,11 +1,16 @@
 from langgraph.graph import StateGraph, END
 from app.agent.workflow import check_requirements_node
 from app.agent.agent_state import AgentState
+from app.agent.reasoning import reasoning_node
 from app.agent.nodes import (
     detect_intent_node,
     execute_tool_node,
     save_history_node,
     response_node,
+)
+from app.services.language_service import (
+    detect_language,
+    get_user_language,
 )
 
 graph_builder = StateGraph(AgentState)
@@ -13,6 +18,11 @@ graph_builder = StateGraph(AgentState)
 graph_builder.add_node(
     "detect_intent",
     detect_intent_node,
+)
+
+graph_builder.add_node(
+    "reasoning",
+    reasoning_node,
 )
 
 graph_builder.add_node(
@@ -41,12 +51,24 @@ graph_builder.set_entry_point(
 
 graph_builder.add_edge(
     "detect_intent",
-    "check_requirements",
+    "reasoning",
 )
 
 graph_builder.add_edge(
+    "reasoning",
     "check_requirements",
-    "execute_tool",
+)
+
+graph_builder.add_conditional_edges(
+    "check_requirements",
+    lambda state:
+        "execute_tool"
+        if state["workflow_state"] == "ready"
+        else "response",
+    {
+        "execute_tool": "execute_tool",
+        "response": "response",
+    },
 )
 
 graph_builder.add_edge(
@@ -83,8 +105,11 @@ def process_request(
             "missing_fields": [],
             "pending_confirmation": False,
             "pending_action": "",
+            "pending_tool": "",
             "tool_result": None,
+            "language": get_user_language(),
             "response": "",
+            "conversation_history": [],
         }
 
     else:
@@ -92,15 +117,23 @@ def process_request(
         state = previous_state.copy()
 
         state["user_input"] = user_input
+        state["language"] = get_user_language()
 
-        # Reset values that must be recalculated
-        state["intent"] = ""
-        state["selected_tool"] = ""
-        state["workflow_state"] = ""
-        state["missing_fields"] = []
-        state["tool_result"] = None
-        state["response"] = ""
+        # Keep the conversation state if we are waiting
+        waiting = (
+            state.get("pending_confirmation", False)
+            or state.get("workflow_state") == "waiting_for_information"
+        )
 
+        if not waiting:
+
+            state["intent"] = ""
+            state["selected_tool"] = ""
+            state["workflow_state"] = ""
+            state["missing_fields"] = []
+            state["tool_result"] = None
+            state["response"] = ""
+            
     final_state = graph.invoke(state)
 
     return final_state

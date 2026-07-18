@@ -1,5 +1,6 @@
 import streamlit as st
-
+from app.services.pdf_service import export_report_pdf
+from app.services.report_service import get_report
 from app.services.report_service import (
     generate_report,
     get_reports,
@@ -101,3 +102,16 @@ def show():
             st.markdown("---")
 
             st.markdown(content)
+            
+            full_report = get_report(report_id)
+
+            pdf = export_report_pdf(full_report)
+
+            st.download_button(
+                label="⬇ Export PDF",
+                data=pdf,
+                file_name=f"CyberGuard_Report_{report_id}.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+                key=f"pdf_{report_id}",
+                )

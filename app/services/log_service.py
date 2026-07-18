@@ -1,77 +1,88 @@
 from app.database.database import get_connection
 
 
-def save_chat(
-    user_message: str,
-    assistant_response: str,
-) -> int:
+def log_execution(
+    intent: str,
+    selected_tool: str,
+    status: str,
+    message: str,
+) -> None:
 
     connection = get_connection()
 
     try:
+
         cursor = connection.cursor()
 
         cursor.execute(
             """
-            INSERT INTO chat_history (
-                user_message,
-                assistant_response
+            INSERT INTO execution_logs(
+                intent,
+                selected_tool,
+                status,
+                message
             )
-            VALUES (?, ?)
+            VALUES (?, ?, ?, ?)
             """,
             (
-                user_message,
-                assistant_response,
+                intent,
+                selected_tool,
+                status,
+                message,
             ),
         )
 
         connection.commit()
 
-        return cursor.lastrowid
-
     finally:
+
         connection.close()
 
 
-def get_chat_history() -> list:
+def get_execution_logs():
 
     connection = get_connection()
 
     try:
+
         cursor = connection.cursor()
 
         cursor.execute(
             """
             SELECT
-                id,
-                user_message,
-                assistant_response,
-                created_at
-            FROM chat_history
-            ORDER BY created_at DESC
+                timestamp,
+                intent,
+                selected_tool,
+                status,
+                message
+            FROM execution_logs
+            ORDER BY timestamp DESC
             """
         )
 
         return cursor.fetchall()
 
     finally:
+
         connection.close()
 
 
-def clear_chat_history() -> None:
+def clear_execution_logs():
 
     connection = get_connection()
 
     try:
+
         cursor = connection.cursor()
 
         cursor.execute(
             """
-            DELETE FROM chat_history
+            DELETE FROM execution_logs
             """
         )
 
         connection.commit()
 
     finally:
+
         connection.close()

@@ -1,27 +1,27 @@
-# 🛡️ CyberGuard AI
+# CyberGuard AI
 
-An AI-powered Personal Cybersecurity Triage Assistant built using LangGraph, Streamlit, and Groq.
+## Description
 
-## Overview
+CyberGuard AI is an AI-powered cybersecurity assistant that helps users:
 
-CyberGuard AI helps everyday users:
-
-- Analyze cybersecurity incidents
+- Analyze passwords
+- Generate secure passwords
 - Detect phishing attempts
-- Check password strength
-- Receive security recommendations
-- Generate incident reports
-- Learn cybersecurity best practices
+- Answer cybersecurity questions
+- Create incidents
+- Generate reports
 
-## Features
+## Installation
 
-- AI-powered incident analysis
-- Password strength checker
-- Daily cybersecurity tips
-- Conversation memory
-- Incident history
-- PDF report generation
-- English and French support
+pip install -r requirements.txt
+
+## Run locally
+
+streamlit run app.py
+
+## Run with Docker
+
+docker compose up --build
 
 ## Technologies
 
@@ -31,7 +31,3 @@ CyberGuard AI helps everyday users:
 - Groq API
 - SQLite
 - Docker
-
-## Project Status
-
-🚧 Under Development

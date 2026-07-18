@@ -1,6 +1,8 @@
 from datetime import datetime
-
 from app.database.database import get_connection
+from app.services.language_service import get_user_language
+
+language = get_user_language()
 
 
 def create_incident(

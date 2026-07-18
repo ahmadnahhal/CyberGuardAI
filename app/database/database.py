@@ -61,6 +61,15 @@ def initialize_database():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+    
+    try:
+       cursor.execute("""
+       ALTER TABLE reports
+       ADD COLUMN incident_id INTEGER
+       """)
+    except sqlite3.OperationalError:
+    # Column already exists
+         pass
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS chat_history (

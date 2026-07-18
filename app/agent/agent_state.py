@@ -27,9 +27,24 @@ class AgentState(TypedDict):
 
     # Action waiting to be executed
     pending_action: str
+    pending_tool: str
 
     # Tool execution result
     tool_result: dict | None
 
     # Final assistant response
     response: str
+
+    # Language
+    language: str
+
+    # Last created incident
+    last_incident: dict | None
+
+    # Last generated report
+    last_report: dict | None
+
+    # Agent reasoning
+    reasoning: str
+    
+    conversation_history: list[dict]

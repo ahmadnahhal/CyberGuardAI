@@ -11,6 +11,8 @@ from app.ui.history import show as show_history
 from app.ui.about import show as show_about
 from app.database.database import initialize_database
 from app.state.app_state import initialize
+from app.ui.memory import show as show_memory
+from app.ui.logs import show as show_logs
 
 st.set_page_config(
     page_title="CyberGuard AI",
@@ -47,6 +49,12 @@ elif page == "Incidents":
 
 elif page == "History":
     show_history()
+    
+elif page == "Memory":
+    show_memory()
+    
+elif page == "Logs":
+    show_logs()
 
 elif page == "About":
     show_about()

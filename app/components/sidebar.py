@@ -9,6 +9,8 @@ NAV_ITEMS = [
     ("📄", "Reports"),
     ("🚨", "Incidents"),
     ("🕘", "History"),
+    ("🧠", "Memory"),
+    ("📋", "Logs"),
     ("ℹ️", "About"),
 ]
 
@@ -74,14 +76,6 @@ def render_sidebar():
         # ===== AI Status =====
         st.markdown("### 🤖 AI Status")
         st.success("Connected")
-        
-        st.divider()
-
-        st.caption("Language")
-        st.write("🇬🇧 English")
-
-        st.caption("AI Model")
-        st.write("Groq (coming soon)")
         
         st.divider()
 

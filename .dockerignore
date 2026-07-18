@@ -1,0 +1,9 @@
+.venv
+__pycache__
+.git
+.gitignore
+.vscode
+*.pyc
+*.pyo
+*.db-journal
+.env

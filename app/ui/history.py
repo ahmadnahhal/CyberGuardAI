@@ -1,45 +1,81 @@
 import streamlit as st
 
-from app.database.database import get_connection
+from app.services.history_service import (
+    get_chat_history,
+    clear_chat_history,
+)
 
 
 def show():
 
-    st.title("🕘 History")
+    st.title("🕘 Chat History")
 
-    connection = get_connection()
-
-    cursor = connection.cursor()
-
-    cursor.execute(
-        """
-        SELECT
-            created_at,
-            user_message,
-            assistant_response
-        FROM chat_history
-        ORDER BY id DESC
-        """
+    st.write(
+        "View previously saved conversations with CyberGuard AI."
     )
 
-    rows = cursor.fetchall()
+    st.divider()
 
-    connection.close()
+    history = get_chat_history()
 
-    if not rows:
+    col1, col2 = st.columns([4, 1])
 
-        st.info("No history yet.")
+    with col1:
+        st.subheader(
+            f"💬 Conversations ({len(history)})"
+        )
+
+    with col2:
+
+        if history:
+
+            if st.button(
+                "🗑 Clear History",
+                use_container_width=True,
+            ):
+
+                clear_chat_history()
+
+                st.success(
+                    "Chat history cleared."
+                )
+
+                st.rerun()
+
+    if not history:
+
+        st.info(
+            "No conversations have been saved yet."
+        )
 
         return
 
-    for created_at, user, assistant in rows:
+    for chat in history:
 
-        with st.expander(created_at):
+        (
+            chat_id,
+            user_message,
+            assistant_response,
+            created_at,
+        ) = chat
 
-            st.write("### User")
+        with st.expander(
+            f"💬 Conversation #{chat_id}"
+        ):
 
-            st.write(user)
+            st.caption(
+                f"Created: {created_at}"
+            )
 
-            st.write("### Result")
+            st.markdown("---")
 
-            st.write(assistant)
+            st.markdown("### 👤 User")
+
+            st.write(user_message)
+
+            st.markdown("### 🤖 CyberGuard AI")
+
+            st.code(
+                assistant_response,
+                language="text",
+            )
