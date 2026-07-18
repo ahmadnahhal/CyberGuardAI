@@ -1,5 +1,9 @@
 import streamlit as st
 
+from app.database.database import initialize_database
+
+initialize_database()
+
 from app.components.sidebar import render_sidebar
 from app.ui.home import show as show_home
 from app.ui.assistant import show as show_assistant
@@ -9,7 +13,6 @@ from app.ui.reports import show as show_reports
 from app.ui.incidents import show as show_incidents
 from app.ui.history import show as show_history
 from app.ui.about import show as show_about
-from app.database.database import initialize_database
 from app.state.app_state import initialize
 from app.ui.memory import show as show_memory
 from app.ui.logs import show as show_logs
@@ -19,8 +22,6 @@ st.set_page_config(
     page_icon="🛡️",
     layout="wide",
 )
-
-initialize_database()
 
 initialize()
 
